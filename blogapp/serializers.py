@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from django.contrib.auth import get_user_model
+from .models import Blog 
 
 
 class UserRegistrationSerializer(serializers.ModelSerializer):
@@ -22,3 +23,9 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
         new_user.set_password(validated_data["password"])
         new_user.save()
         return new_user
+    
+
+class BlogSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Blog
+        fields = ["id", "title", "slug","author","category","content", "featured_image", "published_date", "created_at", "updated_at", "is_draft" ]
