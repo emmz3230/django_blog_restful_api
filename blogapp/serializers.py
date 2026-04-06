@@ -2,6 +2,11 @@ from rest_framework import serializers
 from django.contrib.auth import get_user_model
 from .models import Blog 
 
+class UpdateuserProfileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = get_user_model()
+        fields= ["id", "email", "username", "first_name", "last_name", "bio", "profile_picture",
+                "facebook", "youtube", "instagram", "twitter", "linkedin"]
 
 class UserRegistrationSerializer(serializers.ModelSerializer):
     class Meta:
