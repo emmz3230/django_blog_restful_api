@@ -14,7 +14,8 @@ class BlogListPagination(PageNumberPagination):
 
 
 # Create your views here.
-@api_view(["POST"])
+@api_view(["GET"])
+@permission_classes([AllowAny])
 def blog_list(request):
     blogs = Blog.objects.all()
     paginator = BlogListPagination()
@@ -22,9 +23,11 @@ def blog_list(request):
     serializer = BlogSerializer(paginated_blogs, many=True)
     return paginator.get_paginated_response(serializer.data)
 
-
-
-
+@api_view(['GET'])
+def get_blog(request, slug):
+    blog = Blog.objects.get(slug=slug)
+    serializer = BlogSerializer(blog)
+    return Response(serializer.data)
 
 
 @api_view(["POST"])
@@ -60,11 +63,12 @@ def create_blog(request):
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-@api_view(["GET"])
-def blog_list(request):
-    blogs = Blog.objects.all()
-    serializer = BlogSerializer(blogs, many=True)
-    return Response(serializer.data)
+# @api_view(["GET"])
+# @permission_classes([AllowAny])
+# def blog_list(request):
+#     blogs = Blog.objects.all()
+#     serializer = BlogSerializer(blogs, many=True)
+#     return Response(serializer.data)
 
 
 
