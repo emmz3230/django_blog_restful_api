@@ -33,7 +33,7 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
 class SimpleAuthorSerializer(serializers.ModelSerializer):
     class Meta:
         model = get_user_model()
-        fields = ["id", "username", "first_name", "last_name"]
+        fields = ["id", "username", "first_name", "last_name","profile_picture"]
 
 
 class BlogSerializer(serializers.ModelSerializer):
