@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-17y^zl_91(4dy%h-g8(yx)h)ro*j6^df+!spflxx99xg=g@q-q
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]
 
 
 # Application definition
@@ -63,6 +63,7 @@ TEMPLATES = [
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
+                'django.template.context_processors.debug',
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
@@ -120,25 +121,27 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 
 STATIC_URL = 'static/'
+STATIC_ROOT = BASE_DIR/"static"
 MEDIA_URL = 'img/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
 
 
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTH_USER_MODEL = 'blogapp.CustomUser'
 
 
 
 
-REST_FRAMEWORK = {    'DEFAULT_AUTHENTICATION_CLASSES': (        'rest_framework_simplejwt.authentication.JWTAuthentication',
+REST_FRAMEWORK = {    'DEFAULT_AUTHENTICATION_CLASSES': (  'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),
     'DEFAULT_PERMISSION_CLASSES': (
         'rest_framework.permissions.IsAuthenticated',
     ),
 }
 SIMPLE_JWT = {
-    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=30)
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=60)
 }
 # settings/production.py
 CORS_ALLOWED_ORIGINS = [

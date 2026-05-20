@@ -74,9 +74,9 @@ def create_blog(request):
 
 @api_view(["PUT"])
 @permission_classes([IsAuthenticated])
-def updated_blog(request):
+def updated_blog(request, pk):
     user = request.user
-    blog = Blog.objects.get(id=request.data.get("id"))
+    blog = Blog.objects.get(id=pk)
     if(blog.author != user):
         return Response({"error": "You are not the author of this blog"}, status=status.HTTP_403_FORBIDDEN)
     serializer = BlogSerializer(blog, data=request.data, partial=True)
@@ -95,3 +95,31 @@ def delete_blog(request,pk):
         return Response({"error": "You are not the author of this blog"}, status=status.HTTP_403_FORBIDDEN)
     blog.delete()
     return Response({"message": "Blog deleted successfully"}, status=status.HTTP_204_NO_CONTENT)
+
+
+@api_view(["GET"])
+@permission_classes([IsAuthenticated])
+def get_username(request):
+    user = request.user
+    username = user.username
+    return Response({"username": username})
+
+
+@api_view(['GET'])
+def get_userinfo(request, username):
+    User = get_user_model()
+    user = User.objects.get(username=username)
+    serializer = UserInfoSerializer(user)
+    return Response(serializer.data)
+
+
+@api_view(["GET"])
+def get_user(request, email):
+    User = get_user_model()
+    try:
+        existing_user = User.objects.get(email=email)
+        serializer = SimpleAuthorSerializer(existing_user)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    except User.DoesNotExist:
+        return Response({"detail": "User not found."}, status=status.HTTP_404_NOT_FOUND)
+

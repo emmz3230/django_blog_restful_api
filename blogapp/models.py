@@ -9,23 +9,16 @@ from django.utils import timezone
 class CustomUser(AbstractUser):
     bio = models.TextField(blank=True, null=True)
     profile_picture = models.ImageField(upload_to='profile_img/', blank=True, null=True)
+    profile_picture_url = models.URLField(blank=True, null=True)
+    job_title = models.CharField(max_length=50, blank=True, null=True)
+    
     facebook =  models.URLField(max_length= 255, blank=True, null=True)
     youtube =  models.URLField(max_length= 255, blank=True, null=True)
     instagram =  models.URLField(max_length= 255, blank=True, null=True)
     twitter =  models.URLField(max_length= 255, blank=True, null=True)
     linkedin =  models.URLField(max_length= 255, blank=True, null=True)
 
-    groups = models.ManyToManyField(
-        'auth.Group',
-        related_name='customuser_groups',
-        blank=True,
-    )
-    user_permissions = models.ManyToManyField(
-        'auth.Permission',
-        related_name='customuser_permissions',
-        blank=True,
-    )
-
+    
     def __str__(self):
         return self.username
     
@@ -37,6 +30,11 @@ class Blog(models.Model):
         ('Business', 'Business'),
         ('Sports', 'Sports'),
         ('Lifestyle', 'Lifestyle'),
+        ("Frontend", "Frontend"),
+        ("Backend", "Backend"),
+        ("Fullstack", "Fullstack"),
+        ("Design", "Design"),
+        ("Blockchain", "Blockchain")
     )
 
     title = models.CharField(max_length=255)
@@ -44,8 +42,9 @@ class Blog(models.Model):
     content = models.TextField()
     author = models.ForeignKey(
         settings.AUTH_USER_MODEL,
-        on_delete=models.CASCADE,
-        related_name='blogs',
+        on_delete=models.SET_NULL,
+        related_name="blogs",
+        null=True
     )
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
