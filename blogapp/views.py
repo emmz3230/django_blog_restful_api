@@ -24,6 +24,7 @@ def blog_list(request):
     return paginator.get_paginated_response(serializer.data)
 
 @api_view(['GET'])
+@permission_classes([AllowAny])
 def get_blog(request, slug):
     blog = Blog.objects.get(slug=slug)
     serializer = BlogSerializer(blog)
