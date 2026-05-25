@@ -17,18 +17,7 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
         }
 
     def create(self, validated_data):
-        username = validated_data["username"]
-        first_name = validated_data["first_name"]
-        last_name = validated_data["last_name"]
-        first_name = validated_data["first_name"]
-        password = validated_data["password"]
-
-        user = get_user_model()
-        new_user = user.objects.create(username=username, 
-                                       first_name=first_name, last_name=last_name)
-        new_user.set_password(password)
-        new_user.save()
-        return new_user
+        return get_user_model().objects.create_user(**validated_data)
     
 
 class SimpleAuthorSerializer(serializers.ModelSerializer):
