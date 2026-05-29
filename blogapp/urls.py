@@ -11,5 +11,7 @@ urlpatterns = [
     path("update_user/", views.update_user_profile, name="update_user"),
      path("get_username", views.get_username, name="get_username"),
     path("get_userinfo/<str:username>", views.get_userinfo, name="get_userinfo"),
-    path("get_user/<str:email>", views.get_user, name="get_user")
+    path("get_user/<str:email>", views.get_user, name="get_user"),
+    path("password_reset_request/", views.password_reset_request, name="password_reset_request"),
+    path("password_reset_confirm/", views.password_reset_confirm, name="password_reset_confirm"),
 ]

@@ -7,6 +7,11 @@ from rest_framework.decorators import api_view, permission_classes, authenticati
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework.pagination import PageNumberPagination
+from django.contrib.auth import get_user_model
+from django.contrib.auth.tokens import default_token_generator
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+from django.utils.encoding import force_bytes, force_str
+from django.core.mail import send_mail
 
 
 class BlogListPagination(PageNumberPagination):
@@ -123,4 +128,65 @@ def get_user(request, email):
         return Response(serializer.data, status=status.HTTP_200_OK)
     except User.DoesNotExist:
         return Response({"detail": "User not found."}, status=status.HTTP_404_NOT_FOUND)
+
+
+@api_view(["POST"])
+@permission_classes([AllowAny])
+def password_reset_request(request):
+    email = request.data.get("email")
+    if not email:
+        return Response({"error": "Email is required."}, status=status.HTTP_400_BAD_REQUEST)
+    
+    User = get_user_model()
+    user = User.objects.filter(email=email).first()
+    
+    if user:
+        token = default_token_generator.make_token(user)
+        uid = urlsafe_base64_encode(force_bytes(user.pk))
+        reset_link = f"http://localhost:5173/reset-password?uid={uid}&token={token}"
+        
+        subject = "Password Reset Request"
+        message = (
+            f"Hello {user.username},\n\n"
+            f"We received a password reset request for your account.\n"
+            f"Please click the link below to set a new password:\n\n"
+            f"{reset_link}\n\n"
+            f"If you did not request this, please ignore this email.\n"
+        )
+        
+        send_mail(
+            subject,
+            message,
+            "support@devfolio.com",
+            [email],
+            fail_silently=False,
+        )
+        
+    return Response({"message": "Password reset link sent to your email."}, status=status.HTTP_200_OK)
+
+
+@api_view(["POST"])
+@permission_classes([AllowAny])
+def password_reset_confirm(request):
+    uid = request.data.get("uid")
+    token = request.data.get("token")
+    password = request.data.get("password")
+    
+    if not uid or not token or not password:
+        return Response({"error": "uid, token, and password are all required."}, status=status.HTTP_400_BAD_REQUEST)
+        
+    User = get_user_model()
+    try:
+        uid_decoded = force_str(urlsafe_base64_decode(uid))
+        user = User.objects.get(pk=uid_decoded)
+    except (TypeError, ValueError, OverflowError, User.DoesNotExist):
+        user = None
+        
+    if user and default_token_generator.check_token(user, token):
+        user.set_password(password)
+        user.save()
+        return Response({"message": "Password has been successfully reset!"}, status=status.HTTP_200_OK)
+    else:
+        return Response({"error": "Invalid or expired password reset link."}, status=status.HTTP_400_BAD_REQUEST)
+
 
