@@ -1,6 +1,6 @@
 from django.shortcuts import render, get_object_or_404
 from .models import Blog
-from blogapp.serializers import UpdateuserProfileSerializer, UserRegistrationSerializer, BlogSerializer
+from blogapp.serializers import UpdateuserProfileSerializer, UserRegistrationSerializer, BlogSerializer, UserInfoSerializer, SimpleAuthorSerializer
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.decorators import api_view, permission_classes, authentication_classes

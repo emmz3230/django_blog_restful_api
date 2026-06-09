@@ -5,7 +5,7 @@ from .models import Blog
 class UpdateuserProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = get_user_model()
-        fields= ["id", "email", "username", "first_name", "last_name", "bio", "profile_picture",
+        fields= ["id", "email", "username", "first_name", "last_name", "bio", "job_title","profile_picture",
                 "facebook", "youtube", "instagram", "twitter", "linkedin"]
 
 class UserRegistrationSerializer(serializers.ModelSerializer):
