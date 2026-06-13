@@ -150,6 +150,7 @@ CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",
     "http://localhost:5173",
     "http://localhost:5173",
+    "https://devfolio-ur3f.onrender.com",
 ]
 
 # Email Settings for Password Reset
