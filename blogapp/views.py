@@ -1,6 +1,6 @@
 from django.shortcuts import render, get_object_or_404
-from .models import Blog
-from blogapp.serializers import UpdateuserProfileSerializer, UserRegistrationSerializer, BlogSerializer, UserInfoSerializer, SimpleAuthorSerializer
+from .models import Blog, NewsletterSubscription
+from blogapp.serializers import UpdateuserProfileSerializer, UserRegistrationSerializer, BlogSerializer, UserInfoSerializer, SimpleAuthorSerializer, NewsletterSubscriptionSerializer
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.decorators import api_view, permission_classes, authentication_classes
@@ -188,5 +188,46 @@ def password_reset_confirm(request):
         return Response({"message": "Password has been successfully reset!"}, status=status.HTTP_200_OK)
     else:
         return Response({"error": "Invalid or expired password reset link."}, status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(["POST"])
+@permission_classes([AllowAny])
+def subscribe_newsletter(request):
+    serializer = NewsletterSubscriptionSerializer(data=request.data)
+    if serializer.is_valid():
+        subscription = serializer.save()
+
+        # Send a confirmation email to the subscriber
+        subject = "Welcome to DevFolio Newsletter! 🎉"
+        message = (
+            f"Hi there,\n\n"
+            f"Thank you for subscribing to the DevFolio Weekly Newsletter!\n\n"
+            f"You'll now receive the latest blog articles, tech insights, and exclusive offers "
+            f"straight to your inbox at {subscription.email}.\n\n"
+            f"Stay tuned for great content!\n\n"
+            f"— The DevFolio Team"
+        )
+        try:
+            send_mail(
+                subject,
+                message,
+                "support@devfolio.com",
+                [subscription.email],
+                fail_silently=True,
+            )
+        except Exception:
+            pass  # Don't block subscription if email fails
+
+        return Response({"message": "Subscribed successfully! Check your email for confirmation."}, status=status.HTTP_201_CREATED)
+    
+    # Custom message if the email is already subscribed
+    if "email" in serializer.errors and any(
+        getattr(err, "code", None) == "unique" or "unique" in str(err) or "exists" in str(err).lower()
+        for err in serializer.errors["email"]
+    ):
+        return Response({"error": "This email is already subscribed."}, status=status.HTTP_400_BAD_REQUEST)
+        
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 
 

@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from django.contrib.auth import get_user_model
-from .models import Blog 
+from .models import Blog, NewsletterSubscription 
 
 class UpdateuserProfileSerializer(serializers.ModelSerializer):
     class Meta:
@@ -45,3 +45,9 @@ class UserInfoSerializer(serializers.ModelSerializer):
         blogs = Blog.objects.filter(author=user)[:9]
         serializer = BlogSerializer(blogs, many=True)
         return serializer.data
+
+
+class NewsletterSubscriptionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = NewsletterSubscription
+        fields = ["id", "email", "created_at"]

@@ -14,4 +14,5 @@ urlpatterns = [
     path("get_user/<str:email>/", views.get_user, name="get_user"),
     path("password_reset_request/", views.password_reset_request, name="password_reset_request"),
     path("password_reset_confirm/", views.password_reset_confirm, name="password_reset_confirm"),
+    path("subscribe/", views.subscribe_newsletter, name="subscribe_newsletter"),
 ]

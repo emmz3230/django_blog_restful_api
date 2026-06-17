@@ -72,3 +72,11 @@ class Blog(models.Model):
             self.published_date = timezone.now()
 
         super().save(*args, **kwargs)
+
+
+class NewsletterSubscription(models.Model):
+    email = models.EmailField(unique=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.email

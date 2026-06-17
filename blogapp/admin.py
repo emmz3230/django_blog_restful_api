@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.contrib.auth.admin  import UserAdmin
-from .models import CustomUser, Blog
+from .models import CustomUser, Blog, NewsletterSubscription
 from django.utils.translation import gettext_lazy as _
 
 
@@ -29,3 +29,9 @@ class BlogAdmin(admin.ModelAdmin):
     list_display = ('title', 'is_draft', 'category','created_at')
 
 admin.site.register(Blog, BlogAdmin)
+
+
+class NewsletterSubscriptionAdmin(admin.ModelAdmin):
+    list_display = ('email', 'created_at')
+
+admin.site.register(NewsletterSubscription, NewsletterSubscriptionAdmin)
