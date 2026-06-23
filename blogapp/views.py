@@ -69,13 +69,6 @@ def create_blog(request):
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-# @api_view(["GET"])
-# @permission_classes([AllowAny])
-# def blog_list(request):
-#     blogs = Blog.objects.all()
-#     serializer = BlogSerializer(blogs, many=True)
-#     return Response(serializer.data)
-
 
 
 @api_view(["PUT"])
@@ -154,13 +147,17 @@ def password_reset_request(request):
             f"If you did not request this, please ignore this email.\n"
         )
         
-        send_mail(
-            subject,
-            message,
-            "support@devfolio.com",
-            [email],
-            fail_silently=False,
-        )
+        try:
+            send_mail(
+                subject,
+                message,
+                "support@devfolio.com",
+                [email],
+                fail_silently=False,
+            )
+        except Exception:
+            # Don't raise a 500 if email sending fails (e.g. SMTP not configured)
+            pass
         
     return Response({"message": "Password reset link sent to your email."}, status=status.HTTP_200_OK)
 
