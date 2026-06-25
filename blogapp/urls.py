@@ -15,4 +15,4 @@ urlpatterns = [
     path("password_reset_request/", views.password_reset_request, name="password_reset_request"),
     path("password_reset_confirm/", views.password_reset_confirm, name="password_reset_confirm"),
     path("subscribe/", views.subscribe_newsletter, name="subscribe_newsletter"),
-]
+# ]for someone else to test how do i let them get the uid, token, and password 

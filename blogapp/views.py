@@ -159,6 +159,11 @@ def password_reset_request(request):
             # Don't raise a 500 if email sending fails (e.g. SMTP not configured)
             pass
         
+        return Response({
+            "message": "Password reset link sent to your email.",
+            "reset_link": reset_link,
+        }, status=status.HTTP_200_OK)
+
     return Response({"message": "Password reset link sent to your email."}, status=status.HTTP_200_OK)
 
 
