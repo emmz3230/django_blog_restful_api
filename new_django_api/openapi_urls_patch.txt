@@ -1,0 +1,1 @@
+This file is used to patch OpenAPI and Swagger endpoints into Django URL configuration.
