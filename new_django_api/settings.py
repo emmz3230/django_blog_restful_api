@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'blogapp',
     'rest_framework',
     'corsheaders',
+    'drf_spectacular',
 ]
 
 MIDDLEWARE = [
